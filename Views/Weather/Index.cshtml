@@ -1,0 +1,79 @@
+﻿@model Weather_App.Models.Weather
+@{
+    ViewBag.Title = "Weather App";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style>
+        .weather-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="weather-card shadow-lg">
+                    <form method="post" class="mb-4 row">
+                        <div class="col-md-8">
+                            <input type="text" name="city" class="form-control form-control-lg" placeholder="Enter city" />
+                        </div>
+                        <div class="col-md-2">
+                            <select name="unit" class="form-select form-select-lg">
+                                <option value="metric" selected>Celsius</option>
+                                <option value="imperial">Fahrenheit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Search</button>
+                        </div>
+                    </form>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+
+                    @if (Model != null)
+                    {
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold">@Model.City</h3>
+                            <p class="text-muted text-capitalize">@Model.Description</p>
+                            <img src="@Model.IconUrl" alt="Weather Icon" class="mb-2" />
+                            <h2 class="fw-bold">@Model.Temperature @(Model.IsCelsius ? "°C" : "°F")</h2>
+                            <p>Humidity: @Model.Humidity% | Wind: @Model.WindSpeed @(Model.IsCelsius ? "m/s" : "mph")</p>
+                        </div>
+
+                        <hr />
+                        <h4 class="text-center mb-3">5-Day Forecast</h4>
+                        <div class="row text-center">
+                            @foreach (var f in Model.Forecasts)
+                            {
+                                <div class="col">
+                                    <div class="forecast-card shadow-sm">
+                                        <strong>@f.Date</strong><br />
+                                        @if (!string.IsNullOrEmpty(f.Icon))
+                                        {
+                                            <img src="@Model.IconUrl" alt="Weather Icon" />
+                                        }
+                                        <p class="mb-1 fw-bold">@f.Temperature @(Model.IsCelsius ? "°C" : "°F")</p>
+                                        <small class="text-muted">@f.Description</small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
